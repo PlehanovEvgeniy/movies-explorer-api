@@ -8,12 +8,7 @@ const cors = require('cors');
 require('dotenv').config();
 
 const { requestLogger, errorLogger } = require('./middlewares/logger');
-const authMiddleware = require('./middlewares/auth');
-
-const usersRouter = require('./routes/users');
-const moviesRouter = require('./routes/movies');
-const authRouter = require('./routes/auth');
-
+const routes = require('./routes');
 const NotFoundError = require('./errors/not-found-err');
 
 const { PORT = 3000 } = process.env;
@@ -31,12 +26,9 @@ mongoose.connect('mongodb://localhost:27017/bitfilmsdb', {
   useCreateIndex: true,
   useFindAndModify: false,
 });
+app.use(routes);
 
 app.use(requestLogger);
-
-app.use('/', authRouter);
-app.use('/users', authMiddleware, usersRouter);
-app.use('/movies', authMiddleware, moviesRouter);
 
 app.use(errors());
 
