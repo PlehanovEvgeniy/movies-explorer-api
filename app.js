@@ -5,6 +5,8 @@ const { errors } = require('celebrate');
 const helmet = require('helmet');
 const cors = require('cors');
 
+require('dotenv').config();
+
 const { requestLogger, errorLogger } = require('./middlewares/logger');
 const authMiddleware = require('./middlewares/auth');
 
@@ -36,13 +38,13 @@ app.use('/', authRouter);
 app.use('/users', authMiddleware, usersRouter);
 app.use('/movies', authMiddleware, moviesRouter);
 
-app.use(errorLogger);
-
 app.use(errors());
 
 app.use(() => {
   throw new NotFoundError('Запрашиваемый ресурс не найден');
 });
+
+app.use(errorLogger);
 
 app.use((err, req, res, next) => {
   const { statusCode = 500, message } = err;

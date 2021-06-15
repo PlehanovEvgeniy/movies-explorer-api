@@ -10,22 +10,19 @@ module.exports.getUserInfo = (req, res, next) => {
     })
     .then((user) => res.status(200).send(user))
     .catch((err) => {
-      if (err.name === 'CastError') {
-        throw new BadRequestError('Некорректный Id');
-      }
       throw new NotFoundError(err.message);
     })
     .catch(next);
 };
 
 module.exports.updateUserInfo = (req, res, next) => {
-  const { name } = req.body;
+  const { name, email, password } = req.body;
 
-  if (!name) {
+  if (!name || !email || !password) {
     throw new BadRequestError('Введенные данные о пользователе некорректны');
   }
 
-  User.findByIdAndUpdate(req.user._id, { name }, {
+  User.findByIdAndUpdate(req.user._id, { name, email, password }, {
     new: true,
     runValidators: true,
   })
