@@ -16,13 +16,13 @@ module.exports.getUserInfo = (req, res, next) => {
 };
 
 module.exports.updateUserInfo = (req, res, next) => {
-  const { name, email, password } = req.body;
+  const { name, email } = req.body;
 
-  if (!name || !email || !password) {
+  if (!name || !email) {
     throw new BadRequestError('Введенные данные о пользователе некорректны');
   }
 
-  User.findByIdAndUpdate(req.user._id, { name, email, password }, {
+  User.findByIdAndUpdate(req.user._id, { name, email }, {
     new: true,
     runValidators: true,
   })
